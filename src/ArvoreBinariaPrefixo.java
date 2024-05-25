@@ -1,9 +1,10 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Stack;
 
 class ArvoreBinariaPrefixo {
-    private No raiz;
+    private final No raiz;
 
     public ArvoreBinariaPrefixo() {
         this.raiz = new No(null, false);
@@ -58,16 +59,44 @@ class ArvoreBinariaPrefixo {
     }
 
     public void compactar() {
-        compactar(raiz, -1);
-    }
+        if (raiz == null) return;
 
-    private void compactar(No no, int bitPos) {
-        if (no != null) {
-            no.setBitPos(bitPos);
-            if (!no.isLeaf()) {
-                compactar(no.getLeft(), bitPos + 1);
-                compactar(no.getRight(), bitPos + 1);
+        Stack<No> pilha = new Stack<>();
+        pilha.push(raiz);
+
+        while (!pilha.isEmpty()) {
+            No no = pilha.pop();
+
+            if (no != null && !no.isLeaf())  {
+                No esquerda = no.getLeft();
+                No direita = no.getRight();
+
+                if (esquerda != null && direita == null) {
+                    substituirNo(no, esquerda);
+                    pilha.push(no);
+                } else if (esquerda == null && direita != null) {
+                    substituirNo(no, direita);
+                    pilha.push(no);
+                } else {
+                    if (direita != null) {
+                        pilha.push(direita);
+                    }
+                    if (esquerda != null) {
+                        pilha.push(esquerda);
+                    }
+                }
             }
         }
+    }
+
+    private void substituirNo(No no, No novo) {
+        no.setCaracter(null);
+        no.setLeaf(false);
+        no.setLeft(novo.getLeft());
+        no.setRight(novo.getRight());
+        no.setCaracter(novo.getCaracter());
+        no.setLeaf(novo.isLeaf());
+        no.setLeft(novo.getLeft());
+        no.setRight(novo.getRight());
     }
 }
