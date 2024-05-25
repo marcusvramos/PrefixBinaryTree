@@ -59,8 +59,6 @@ class ArvoreBinariaPrefixo {
     }
 
     public void compactar() {
-        if (raiz == null) return;
-
         Stack<No> pilha = new Stack<>();
         pilha.push(raiz);
 
@@ -96,7 +94,5 @@ class ArvoreBinariaPrefixo {
         no.setRight(novo.getRight());
         no.setCaracter(novo.getCaracter());
         no.setLeaf(novo.isLeaf());
-        no.setLeft(novo.getLeft());
-        no.setRight(novo.getRight());
     }
 }
